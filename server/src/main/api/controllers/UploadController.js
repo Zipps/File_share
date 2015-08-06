@@ -4,6 +4,7 @@ var Utils = require('../utils/ErrorHelper');
 var fs = require('fs');
 var uid = require('uid');
 var mime = require('mime');
+var glob = require('glob');
 
 var FILE_STORAGE = './server/file_storage/';
 
@@ -88,14 +89,18 @@ module.exports.deleteFile = function(req, res, next) {
     var fileContainer = req.params._id;
     var fileKey = req.params.key;
     var filePath = FILE_STORAGE + fileContainer + '/' + fileKey;
-    console.log(filePath);
     var query = {_id: fileContainer};
+    glob(filePath + '.*', function(err, files) {
+        console.log('File match: ' + files);
 
-    // delete file
-    fs.unlink( filePath, function(err) {
-        if (err) throw err;
-        console.log('deleted: ' + filePath);
+        // delete file
+        fs.unlink( files[0], function(err) {
+            if (err) throw err;
+            console.log('deleted: ' + files[0]);
+        });
     });
+
+
 
     // remove file from db
     console.log('Removing db entry for key: ' + fileKey);

@@ -22,10 +22,10 @@ angular.module('MyApp')
             })
                 .success(function(res) {
                     $alert({
-                        content: 'Merged all PDF\'s',
+                        content: 'Merged all PDF\'s into "merged_doc.pdf"',
                         animation: 'fadeZoomFadeDown',
                         type: 'material',
-                        duration: 3
+                        duration: 5
                     });
                     console.log(res);
                     $scope.files.push(res);
