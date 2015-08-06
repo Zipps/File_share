@@ -23,7 +23,9 @@
     "node-uuid": "^1.4.2",
     "nodemailer": "^0.7.1",
     "on-headers": "^1.0.0",
+    "pdf-merge": "0.0.2",
     "pdf_page_count": "^1.0.10",
+    "uid": "0.0.2",
     "winston": "^1.0.0"
   },
   "devDependencies": {
