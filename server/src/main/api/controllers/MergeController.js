@@ -2,6 +2,7 @@ var fs = require('fs');
 var PDFMerge = require('pdf-merge');
 var path = require('path');
 var Container = require('../models/UploadFileModel');
+var uid = require('uid');
 
 //  Constants
 var PDFTK_PATH = 'C:/Program Files (x86)/PDFtk Server/bin/pdftk.exe';
@@ -23,6 +24,7 @@ module.exports.merge = function(req, res, next) {
         else {
             console.log("Files merged.");
             var metadata = {
+                key: uid(24),
                 filename: TEMP_NAME,
                 size: getFileSize(dir),
                 contentType: "application/pdf",
