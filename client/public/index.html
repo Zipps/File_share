@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href="/">
+    <meta charset="utf-8">
+    <title>PDFMerge</title>
+    <!--<link href="assets/favicon.png" rel="icon" type="image/png">-->
+    <link href='http://fonts.googleapis.com/css?family=Roboto|Montserrat:400,700|Open+Sans:400,300,700' rel='stylesheet'
+          type='text/css'>
+    <link href="//cdn.jsdelivr.net/ionicons/1.4.1/css/ionicons.min.css" rel="stylesheet">
+    <link href="assets/stylesheets/animate.css" rel="stylesheet">
+    <link href="assets/stylesheets/style.css" rel="stylesheet">
+    <link href="assets/stylesheets/xeditable.css" rel="stylesheet">
+    <link href="assets/stylesheets/dropzone.css" rel="stylesheet">
+</head>
+<body>
+<div class="navbar navbar-default navbar-static-top" role="navigation" bs-navbar>
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/">
+            <span>PDF<strong>Merge</strong></span>
+        </a>
+    </div>
+    <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+    </ul>
+</div>
+
+<div ng-view class="{{pageClass}}"></div>
+
+<script src="assets/vendor/angular.js"></script>
+<script src="assets/vendor/angular-strap.js"></script>
+<script src="assets/vendor/angular-strap.tpl.js"></script>
+<script src="assets/vendor/angular-messages.js"></script>
+<script src="assets/vendor/angular-resource.js"></script>
+<script src="assets/vendor/angular-route.js"></script>
+<script src="assets/vendor/angular-animate.js"></script>
+<script src="assets/vendor/angular-sanitize.js"></script>
+<script src="assets/vendor/xeditable.min.js"></script>
+<script src="assets/vendor/moment.min.js"></script>
+<script src="assets/vendor/dropzone.js"></script>
+
+<script src="src/app.js"></script>
+<script src="src/filters/filters.js"></script>
+<script src="src/directives/dropzone.js"></script>
+<script src="src/controllers/newUpload.js"></script>
+<script src="src/controllers/viewUpload.js"></script>
+
+
+<!--<script src="app.min.js"></script>-->
+<!--<script src="templates.js"></script>-->
+</body>
+</html>

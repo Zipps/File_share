@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Upload Files
+        </div>
+        <div class="panel-body">
+            <form class="dropzone" dropzone="dropzoneConfig">
+
+            </form>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            File List
+        </div>
+        <div class="panel-body">
+            <div class="list-group">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Size</th>
+                        <th>Upload Date</th>
+                        <th>Download</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="file in files">
+                        <td>{{file.filename}}</td>
+                        <td>{{file.size|toMB}}</td>
+                        <td>{{file.uploadDate|fromNow}}</td>
+                        <td><a href="{{ '/api/upload/' + uploadId + '/file/' + file.key }}" target="_blank"><button type="button" class="btn btn-primary">Download</button></a></td>
+                        <td><button type="button" class="btn btn-danger" ng-click="deleteFile($index)">Delete</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <button type="button" class="btn btn-success btn-sm" ng-click="mergeDownload()">Merge PDF's</button>
+        </div>
+    </div>
+</div>
