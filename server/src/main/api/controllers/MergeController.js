@@ -3,6 +3,9 @@ var PDFMerge = require('pdf-merge');
 var path = require('path');
 var Container = require('../models/UploadFileModel');
 var uid = require('uid');
+var pdf_page_count = require('pdf_page_count');
+var pdfkit = require('pdfkit');
+var async = require('async');
 
 //  Constants
 var PDFTK_PATH = 'C:/Program Files (x86)/PDFtk Server/bin/pdftk.exe';
@@ -14,67 +17,73 @@ var TEMP_NAME = 'merged_doc.pdf';
 
 // Merge all PDF's into one document
 module.exports.merge = function(req, res, next) {
-    var containerId = req.params._id;
-    var dir = FILE_STORAGE + containerId + '/';
-    var merge = new PDFMerge(pdfFileList(dir), PDFTK_PATH);
-    merge.asNewFile(outputFilePath(dir, TEMP_NAME)).merge(function(err) {
-        if(err != null){
-            console.log("Error merging files: " + err);
-        }
-        else {
-            console.log("Files merged.");
-            var metadata = {
-                key: uid(24),
-                filename: TEMP_NAME,
-                size: getFileSize(dir),
-                contentType: "application/pdf",
-                uploadDate: Date.now()
-            };
-            addFileToDatabase(metadata, containerId);
-            res.json(metadata);
-        }
-    });
-};
 
-var getFileSize = function(dir) {
-    var stats = fs.statSync(dir + TEMP_NAME);
-    return stats["size"];
-};
+    var pdfFileList = function(callback) {
+        var pdfList = [];
+        var pdfCount = 0;
+        fs.readdir(FILE_STORAGE + req.params._id + '/', function(err, files) {
+            files.forEach(function(file) {
+                var fileExt = path.extname(file);
+                if (fileExt == PDF_EXT) {
+                    ++pdfCount;
+                    var pdfPath = FILE_STORAGE + req.params._id + '/' + file;
+                    pdfList.push(pdfPath);
+                }
+            });
+            if (pdfCount == 0) return err;
+            callback(null, pdfList);
+        });
+    };
 
-// Returns an array of all PDF file names in a directory
-var pdfFileList = function(dir) {
-    var pdfList = [];
-    var pdfCount = 0;
-    var files = fs.readdirSync(dir);
-    files.forEach(function(file) {
-        var fileExtention = path.extname(file);
-        if (fileExtention == PDF_EXT) {
-            ++pdfCount;
-            pdfList.push(dir + file);
-        }
-    });
-    if (pdfCount == 0) return null;
-    else return pdfList;
-};
+    var mergePDFs = function(pdfList, callback) {
+        var newKey = uid(24);
+        var filePath = FILE_STORAGE + req.params._id + '/' + newKey + PDF_EXT;
+        var pdfMerge = new PDFMerge(pdfList, PDFTK_PATH);
+        pdfMerge.asNewFile(filePath).merge(function(e) {
+                if(e != null) return console.log(e);
+                else {
+                    console.log("Files merged");
+                    callback(null, newKey);
+                }
+        });
+    };
 
-// Creates the output file path
-var outputFilePath = function(dir) {
-    var fileExtention = path.extname(TEMP_NAME);
-    if(fileExtention != PDF_EXT) {
-        TEMP_NAME += PDF_EXT;
-    }
-    return dir + TEMP_NAME;
-};
+    var getFileSize = function(key, callback) {
+        fs.stat(FILE_STORAGE + req.params._id + '/' + key + PDF_EXT, function(err, stats) {
+            if(err) console.log("Error getting file size.");
+            var fileSize = stats["size"];
+            callback(null, key, fileSize);
+        });
+    };
 
-var addFileToDatabase = function(metadata, ID) {
-    Container.findOneAndUpdate({
-            _id: ID
+    var addToDatabase = function(key, fileSize, callback) {
+        var metadata = {
+            key: key,
+            filename: TEMP_NAME,
+            size: fileSize,
+            contentType: 'application/pdf',
+            uploadDate: Date.now()
+        };
+
+        Container.findOneAndUpdate({
+            _id: req.params._id
         }, {
             $push: {
                 files: metadata
             }
         }, function(err) {
-            console.log(err);
-        }
-    )
+            return err;
+        });
+        callback(null, metadata);
+    };
+
+    async.waterfall([
+            pdfFileList,
+            mergePDFs,
+            getFileSize,
+            addToDatabase
+        ], function (err, result) {
+            if (err) return next(err);
+            res.status(201).json(result);
+    });
 };
