@@ -3,7 +3,7 @@ var PDFMerge = require('pdf-merge');
 var path = require('path');
 var Container = require('../models/UploadFileModel');
 var uid = require('uid');
-var pdf_page_count = require('pdf_page_count');
+var pdfPageCount = require('pdf_page_count');
 var pdfkit = require('pdfkit');
 var async = require('async');
 
@@ -18,6 +18,7 @@ var TEMP_NAME = 'merged_doc.pdf';
 // Merge all PDF's into one document
 module.exports.merge = function(req, res, next) {
 
+    // Get array of all PDF file paths
     var pdfFileList = function(callback) {
         var pdfList = [];
         var pdfCount = 0;
@@ -35,6 +36,7 @@ module.exports.merge = function(req, res, next) {
         });
     };
 
+    // Merge all PDFs into one document
     var mergePDFs = function(pdfList, callback) {
         var newKey = uid(24);
         var filePath = FILE_STORAGE + req.params._id + '/' + newKey + PDF_EXT;
@@ -48,6 +50,7 @@ module.exports.merge = function(req, res, next) {
         });
     };
 
+    // Get the file size of the merged doc
     var getFileSize = function(key, callback) {
         fs.stat(FILE_STORAGE + req.params._id + '/' + key + PDF_EXT, function(err, stats) {
             if(err) console.log("Error getting file size.");
@@ -56,6 +59,7 @@ module.exports.merge = function(req, res, next) {
         });
     };
 
+    // Insert merged doc metadata into database
     var addToDatabase = function(key, fileSize, callback) {
         var metadata = {
             key: key,
@@ -82,8 +86,8 @@ module.exports.merge = function(req, res, next) {
             mergePDFs,
             getFileSize,
             addToDatabase
-        ], function (err, result) {
+        ], function (err, metadata) {
             if (err) return next(err);
-            res.status(201).json(result);
+            res.status(201).json(metadata);
     });
 };
