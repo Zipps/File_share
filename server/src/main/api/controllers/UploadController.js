@@ -84,7 +84,6 @@ var addFileToDatabase = function(metadata, ID) {
     )
 };
 
-
 module.exports.deleteFile = function(req, res, next) {
     var fileContainer = req.params._id;
     var fileKey = req.params.key;
@@ -99,8 +98,6 @@ module.exports.deleteFile = function(req, res, next) {
             console.log('deleted: ' + files[0]);
         });
     });
-
-
 
     // remove file from db
     console.log('Removing db entry for key: ' + fileKey);
@@ -129,9 +126,9 @@ module.exports.downloadFile = function(req, res, next) {
             if (err) console.log(err);
             if (err) return res.status(500).json(Utils.handleDatabaseError(err));
             if (!doc) return res.status(404).json(Utils.handleDatabaseError(err));
-            var filestream = fs.createReadStream(FILE_STORAGE + req.params._id + '/' + req.params.key);
 
             doc = doc.files[0];
+            var filestream = fs.createReadStream(FILE_STORAGE + req.params._id + '/' + req.params.key + '.' + mime.extension(doc.contentType));
 
             res.setHeader('Content-disposition', 'attachment; filename="' + doc.filename + '"');
             res.setHeader('Content-Type', doc.contentType);
