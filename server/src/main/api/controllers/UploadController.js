@@ -12,6 +12,7 @@ module.exports.newUpload = function(req, res, next) {
     var container = new Container(req.body);
     container.save(function (err, doc) {
         if (err) return res.status(500).json(Utils.handleDatabaseError(err));
+        console.log(doc);
         res.status(201).json(doc);
     });
 
