@@ -7,16 +7,16 @@
         <div class="panel-body">
             <div class="list-group">
                 <h5>Drag & drop for merge order</h5>
-                <ul data-ng-model="items" class="list-group" style="cursor:move;" data-as-sortable="board.dragControlListeners">
-                    <li class="list-group-item" data-ng-repeat="file in pdfFiles | filter: {contentType: 'application/pdf' }" data-as-sortable-item>
+                <ul data-ng-model="pdfFiles" class="list-group" style="cursor:move;" data-as-sortable="board.dragControlListeners">
+                    <li class="list-group-item" data-ng-repeat="file in pdfFiles" data-as-sortable-item>
                         <div data-as-sortable-item-handle>{{file.filename}}</div>
                     </li>
                 </ul>
             </div>
-            <form class="form" method="post" ng-submit="mergeDownload()" name="mergeForm">
+            <form class="form" method="post" ng-submit="mergeDownload(pdfFiles)" name="mergeForm">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" value="">Add blank page to documents with odd number of pages
+                        <input type="checkbox" value="" name="addBlankPage">Add blank page to documents with odd number of pages
                     </label>
                     <span class="ion-information-circled"
                           bs-popover="tooltips"
@@ -26,7 +26,7 @@
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" value="">Insert title page between documents
+                        <input type="checkbox" value="" name="addTitlePage">Insert title page between documents
                     </label>
                     <span class="ion-information-circled"
                           bs-popover="tooltips"
@@ -34,7 +34,7 @@
                           data-content="{{tooltips.titlePage.content}}"
                           data-animation="am-flip-x"></span>
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm" ng-click="mergeDownload()">Merge PDF's</button>
+                <button type="submit" class="btn btn-primary btn-sm">Merge PDF's</button>
             </form>
         </div>
     </div>

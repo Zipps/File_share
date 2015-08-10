@@ -18,22 +18,16 @@ var TEMP_NAME = 'merged_doc.pdf';
 // Merge all PDF's into one document
 module.exports.merge = function(req, res, next) {
 
-    // Get array of all PDF file paths
+    // Append all pdf files with full path
     var pdfFileList = function(callback) {
-        var pdfList = [];
-        var pdfCount = 0;
-        fs.readdir(FILE_STORAGE + req.params._id + '/', function(err, files) {
-            files.forEach(function(file) {
-                var fileExt = path.extname(file);
-                if (fileExt == PDF_EXT) {
-                    ++pdfCount;
-                    var pdfPath = FILE_STORAGE + req.params._id + '/' + file;
-                    pdfList.push(pdfPath);
-                }
-            });
-            if (pdfCount == 0) return err;
-            callback(null, pdfList);
-        });
+        var pdfFileNames = req.body;
+        var dir = FILE_STORAGE + req.params._id + '/';
+        var n = pdfFileNames.length;
+        for(var i = 0; i < n; i++) {
+            var temp = dir + pdfFileNames[i];
+            pdfFileNames[i] = temp;
+        }
+        callback(null, pdfFileNames);
     };
 
     // Merge all PDFs into one document

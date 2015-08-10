@@ -1,16 +1,18 @@
 angular.module('MyApp')
-    .controller('MergePdfCtrl', function ($scope, $http, $routeParams, $location, $alert) {
+    .controller('MergePdfCtrl', function ($scope, $http, $routeParams, $location, $alert, $filter) {
+        var fileList = [];
         $http({
             url: '/api/upload/' + $routeParams._id,
             method: 'GET'
         })
             .success(function(res) {
-                console.log(res);
-                $scope.pdfFiles = res;
+                $scope.files = res;
+                $scope.pdfFiles = $filter('filter')($scope.files,{contentType: 'application/pdf'});
             })
             .error(function (err) {
                 console.log(err);
             });
+
         $scope.uploadId = $routeParams._id;
 
         $scope.tooltips = {
@@ -29,11 +31,17 @@ angular.module('MyApp')
             containment: '#board'
         };
 
-        $scope.mergeDownload = function() {
+        $scope.mergeDownload = function(pdfFiles) {
             console.log("begin merge...");
+            var mergeList = [];
+            pdfFiles.forEach(function(file) {
+                mergeList.push(file.key + '.pdf');
+            });
+            console.log('Merge list: ' + mergeList);
             $http({
                 url: '/api/upload/' + $routeParams._id + '/merge',
-                method: 'POST'
+                method: 'POST',
+                data: mergeList
             })
                 .success(function(res) {
                     $alert({
@@ -43,7 +51,6 @@ angular.module('MyApp')
                         duration: 5
                     });
                     console.log(res);
-                    $scope.files.push(res);
                     $location.path('/upload/' + $routeParams._id);
                 })
                 .error(function (err) {
