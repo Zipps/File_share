@@ -11,6 +11,10 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngRoute', 'ngAnimate', 'ng
                 templateUrl: 'src/views/uploadFile.html',
                 controller: 'ViewUploadCtrl'
             })
+            .when('/upload/:_id/merge', {
+                templateUrl: 'src/views/mergePdf.html',
+                controller: 'MergePdfCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

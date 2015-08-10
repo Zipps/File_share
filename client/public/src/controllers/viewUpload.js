@@ -14,26 +14,6 @@ angular.module('MyApp')
             });
         $scope.uploadId = $routeParams._id;
 
-        $scope.mergeDownload = function() {
-            console.log("begin merge...");
-            $http({
-                url: '/api/upload/' + $routeParams._id + '/merge',
-                method: 'POST'
-            })
-                .success(function(res) {
-                    $alert({
-                        content: 'Merged all PDF\'s into "merged_doc.pdf"',
-                        animation: 'fadeZoomFadeDown',
-                        type: 'material',
-                        duration: 5
-                    });
-                    console.log(res);
-                    $scope.files.push(res);
-                })
-                .error(function (err) {
-                    console.log(err);
-                });
-        };
         $scope.deleteFile = function(index) {
             $http({
                 url: '/api/upload/' + $routeParams._id + '/file/' + $scope.files[index].key,
