@@ -14,10 +14,26 @@
                 </ul>
             </div>
             <form class="form" method="post" ng-submit="mergeDownload()" name="mergeForm">
-                <input type="radio" name="blankPages">Add blank page to documents with odd number of pages
-                <br>
-                <input type="radio" name="titlePages">Insert title page between documents
-                <br>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">Add blank page to documents with odd number of pages
+                    </label>
+                    <span class="ion-information-circled"
+                          bs-popover="tooltips"
+                          data-placement="right"
+                          data-content="{{tooltips.blankPage.content}}"
+                          data-animation="am-flip-x"></span>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">Insert title page between documents
+                    </label>
+                    <span class="ion-information-circled"
+                          bs-popover="tooltips"
+                          data-placement="right"
+                          data-content="{{tooltips.titlePage.content}}"
+                          data-animation="am-flip-x"></span>
+                </div>
                 <button type="submit" class="btn btn-primary btn-sm" ng-click="mergeDownload()">Merge PDF's</button>
             </form>
         </div>

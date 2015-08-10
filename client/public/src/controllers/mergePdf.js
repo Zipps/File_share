@@ -13,6 +13,15 @@ angular.module('MyApp')
             });
         $scope.uploadId = $routeParams._id;
 
+        $scope.tooltips = {
+            blankPage: {
+                content: "Useful for printing double-sided, so that seperate documents do not print on the same page."
+            },
+            titlePage: {
+                content: "Add a title page separating each document that will display the filename."
+            }
+        };
+
         $scope.dragControlListeners = {
             accept: function (sourceItemHandleScope, destSortableScope) {return true},
             itemMoved: function (event) {},
