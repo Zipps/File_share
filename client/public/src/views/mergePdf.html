@@ -6,7 +6,7 @@
         </div>
         <div class="panel-body">
             <div class="list-group">
-                <h5>Order</h5>
+                <h5>Drag & drop for merge order</h5>
                 <ul data-ng-model="items" class="list-group" style="cursor:move;" data-as-sortable="board.dragControlListeners">
                     <li class="list-group-item" data-ng-repeat="file in pdfFiles | filter: {contentType: 'application/pdf' }" data-as-sortable-item>
                         <div data-as-sortable-item-handle>{{file.filename}}</div>

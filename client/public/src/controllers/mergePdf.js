@@ -15,7 +15,7 @@ angular.module('MyApp')
 
         $scope.tooltips = {
             blankPage: {
-                content: "Useful for printing double-sided, so that seperate documents do not print on the same page."
+                content: "Useful for printing double-sided, so that separate documents do not print on the same page."
             },
             titlePage: {
                 content: "Add a title page separating each document that will display the filename."
