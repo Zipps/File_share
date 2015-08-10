@@ -1,4 +1,4 @@
-angular.module('MyApp', ['ngResource', 'ngMessages', 'ngRoute', 'ngAnimate', 'ngSanitize', 'mgcrea.ngStrap', 'xeditable', 'dropzone'])
+angular.module('MyApp', ['ngResource', 'ngMessages', 'ngRoute', 'ngAnimate', 'ngSanitize', 'mgcrea.ngStrap', 'xeditable', 'dropzone', 'ui.sortable'])
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(true);
 
