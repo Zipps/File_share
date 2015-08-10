@@ -7,8 +7,10 @@
         <div class="panel-body">
             <div class="list-group">
                 <h5>Order</h5>
-                <ul ui-sortable ng-model="items" class="list-group" style="cursor:move;">
-                    <li class="list-group-item" ng-repeat="file in list">{{file}}</li>
+                <ul data-ng-model="items" class="list-group" style="cursor:move;" data-as-sortable="board.dragControlListeners">
+                    <li class="list-group-item" data-ng-repeat="file in pdfFiles | filter: {contentType: 'application/pdf' }" data-as-sortable-item>
+                        <div data-as-sortable-item-handle>{{file.filename}}</div>
+                    </li>
                 </ul>
             </div>
             <form class="form" method="post" ng-submit="mergeDownload()" name="mergeForm">

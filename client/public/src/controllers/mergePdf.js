@@ -13,7 +13,12 @@ angular.module('MyApp')
             });
         $scope.uploadId = $routeParams._id;
 
-        $scope.list = [1,2,3,4,5,6,7];
+        $scope.dragControlListeners = {
+            accept: function (sourceItemHandleScope, destSortableScope) {return true},
+            itemMoved: function (event) {},
+            orderChanged: function (event) {},
+            containment: '#board'
+        };
 
         $scope.mergeDownload = function() {
             console.log("begin merge...");
