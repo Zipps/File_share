@@ -11,7 +11,7 @@ module.exports = function () {
         case 'development':
             return {
                 app: {
-                    name: 'EasyShare-DEV'
+                    name: 'EasyBind-DEV'
                 },
                 http: 3000,
                 imap: {
@@ -19,13 +19,13 @@ module.exports = function () {
                     port: 993,
                     tls: true
                 },
-                dbURI: 'mongodb://127.0.0.1:27017/mailmonitor',
+                dbURI: 'mongodb://127.0.0.1:27017/easybind',
                 logger: logger
             };
         case 'testing':
             return {
                 app: {
-                    name: 'EasyShare-UAT'
+                    name: 'EasyBind-UAT'
                 },
                 http: 3000,
                 imap: {
@@ -33,13 +33,13 @@ module.exports = function () {
                     port: 993,
                     tls: true
                 },
-                dbURI: 'mongodb://127.0.0.1:27017/mailmonitor',
+                dbURI: 'mongodb://127.0.0.1:27017/easybindr',
                 logger: logger
             };
         case 'production':
             return {
                 app: {
-                    name: 'EasyShare'
+                    name: 'EasyBind'
                 },
                 http: 3000,
                 imap: {
@@ -47,7 +47,7 @@ module.exports = function () {
                     port: 993,
                     tls: true
                 },
-                dbURI: 'mongodb://127.0.0.1:27017/mailmonitor',
+                dbURI: 'mongodb://127.0.0.1:27017/easybind',
                 logger: logger
             };
         default:

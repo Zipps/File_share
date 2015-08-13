@@ -11,7 +11,7 @@ var winston = require('winston'),
     env = process.env.NODE_ENV || 'development';
 
 
-var name = 'MailMonitor';
+var name = 'EasyBind';
 
 var config = {
     levels: {
