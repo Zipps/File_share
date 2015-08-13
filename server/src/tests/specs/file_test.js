@@ -48,11 +48,11 @@ describe('Files:', function() {
             .attach('test-file', __dirname + '/../data/test_file_one.pdf')
             .expect('Content-Type', /json/)
             .expect(function(res) {
-                res.body.should.have.property('key');
-                res.body.should.have.property('filename');
-                res.body.should.have.property('size');
-                res.body.should.have.property('contentType');
-                res.body.should.have.property('uploadDate');
+                res.body.should.have.property('key').should.not.equal(null);
+                res.body.should.have.property('filename').should.not.equal(null);
+                res.body.should.have.property('size').should.not.equal(null);
+                res.body.should.have.property('contentType').should.not.equal(null);
+                res.body.should.have.property('uploadDate').should.not.equal(null);
                 files.push(res.body.key + '.pdf');
             })
             .expect(201, done);
@@ -71,6 +71,12 @@ describe('Files:', function() {
                 files.push(res.body.key + '.pdf');
             })
             .expect(201, done);
+    });
+    it("Should reject a non-PDF file upload attempt", function(done) {
+        request(app)
+            .post(basePath + '/upload' + upload._id + '/file')
+            .attach('test-file', __dirname + '/../data/test_file.docx')
+            .expect(500, done);
     });
     it('Should return an array of the file names', function(done) {
         request(app)

@@ -12,7 +12,6 @@ module.exports.newUpload = function(req, res, next) {
     var container = new Container(req.body);
     container.save(function (err, doc) {
         if (err) return res.status(500).json(Utils.handleDatabaseError(err));
-        console.log(doc);
         res.status(201).json(doc);
     });
 
@@ -26,10 +25,6 @@ module.exports.newUpload = function(req, res, next) {
 
 // Handles file uploads
 module.exports.uploadFile = function(req, res, next) {
-    var xyz = function() {
-
-    };
-
     try {
         var busboy = new Busboy({ headers: req.headers });
     } catch (e) {
@@ -43,7 +38,6 @@ module.exports.uploadFile = function(req, res, next) {
         // generate key for file
         var newKey = uid(24);
         var containerId = req.params._id;
-
 
         var metadata= {
             key: newKey,
@@ -65,6 +59,21 @@ module.exports.uploadFile = function(req, res, next) {
         file.pipe(fstream);
     });
 
+    var addFileToDatabase = function(metadata, ID, callback) {
+        Container.findOneAndUpdate({
+                _id: ID
+            }, {
+                $push: {
+                    files: metadata
+                }
+            }, function(err) {
+                if (err) return callback(err);
+
+                callback();
+            }
+        )
+    };
+
     busboy.on('error', function(err) {
         console.error(err);
         res.status(400).json(err);
@@ -74,21 +83,6 @@ module.exports.uploadFile = function(req, res, next) {
     });
     req.pipe(busboy);
     // END FILE UPLOAD
-};
-
-var addFileToDatabase = function(metadata, ID, callback) {
-    Container.findOneAndUpdate({
-        _id: ID
-    }, {
-        $push: {
-            files: metadata
-        }
-    }, function(err) {
-            if (err) return callback(err);
-
-            callback();
-        }
-    )
 };
 
 module.exports.deleteFile = function(req, res, next) {
