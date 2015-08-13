@@ -13,6 +13,9 @@ var fs = require('fs');
 var app = require('../../../app');
 var basePath = '/api';
 
+// Reusable Variables
+var upload = {};
+
 describe('Uploads:', function() {
     it('Should respond with an upload id', function(done) {
         request(app)
@@ -24,13 +27,12 @@ describe('Uploads:', function() {
             })
             .expect(201, done);
     });
-    it('Should return list of files', function(done) {
+    it('Should return file container', function(done) {
         request(app)
             .get(basePath + '/upload/' + upload._id)
             .expect('Content-Type', /json/)
             .expect(function(res) {
-                console.log(res);
-                var temp = res.body[0];
+                var temp = res.body;
                 temp.should.have.property('_id');
                 temp.should.not.have.property('key');
             })
@@ -39,7 +41,7 @@ describe('Uploads:', function() {
 });
 
 describe('Files:', function() {
-    it('Should upload the file to the container', function(done) {
+    it('Should upload the first file to the container', function(done) {
         request(app)
             .post(basePath + '/upload/' + upload._id + '/file')
             .attach('test-file', __dirname + '/../data/test_file_one.pdf')
@@ -53,6 +55,44 @@ describe('Files:', function() {
                 file = res.body;
             })
             .expect(201, done);
+    });
+    it('Should upload the second file to the container', function(done) {
+        request(app)
+            .post(basePath + '/upload/' + upload._id + '/file')
+            .attach('test-file', __dirname + '/../data/test_file_two.pdf')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                res.body.should.have.property('key');
+                res.body.should.have.property('filename');
+                res.body.should.have.property('size');
+                res.body.should.have.property('contentType');
+                res.body.should.have.property('uploadDate');
+                file = res.body;
+            })
+            .expect(201, done);
+    });
+});
+
+describe('Merge:', function() {
+    it('Should merge the PDF files', function (done) {
+        var body = {
+            files: [
+                'test_file_one.pdf',
+                'test_file_two.pdf'
+            ]
+        };
+        request(app)
+            .post(basePath + '/upload/' + upload._id + '/merge')
+            .send(body)
+            .expect('Content-Type', /json/)
+            .expect(function (res) {
+                res.body.should.have.property('key');
+                res.body.should.have.property('filename');
+                res.body.should.have.property('size');
+                res.body.should.have.property('contentType');
+                res.body.should.have.property('uploadDate');
+            })
+            .expect(201, done)
     });
 });
 
