@@ -1,22 +1,23 @@
-var fs = require('fs');
-var PDFMerge = require('pdf-merge');
-var path = require('path');
-var Container = require('../models/UploadFileModel');
-var uid = require('uid');
-var pdfPageCount = require('pdf_page_count');
-var pdfkit = require('pdfkit');
-var async = require('async');
+/**
+ * MergeController.js
+ *
+ * @description :: Request controller for managing PDF merging
+ * @docs        ::
+ */
 
-//  Constants
-var PDFTK_PATH = 'C:/Program Files (x86)/PDFtk Server/bin/pdftk.exe';
-var PDF_EXT = '.pdf';
-var FILE_STORAGE = './server/file_storage/';
-var TEMP_NAME = 'merged_doc.pdf';
+var Merge = require('../services/MergeService')
 
 
 
 // Merge all PDF's into one document
 module.exports.merge = function(req, res, next) {
+    Merge.merge(req, function (err, doc, metadata) {
+        if (err) {
+            console.log(err);
+            return next(err);
+        }
+        res.status(201).json(metadata);
+    });
 
     // Append all pdf files with full path
     var pdfFileList = function(callback) {
