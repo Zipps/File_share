@@ -26,6 +26,10 @@ module.exports.newUpload = function(req, res, next) {
 
 // Handles file uploads
 module.exports.uploadFile = function(req, res, next) {
+    var xyz = function() {
+
+    };
+
     try {
         var busboy = new Busboy({ headers: req.headers });
     } catch (e) {
@@ -35,7 +39,6 @@ module.exports.uploadFile = function(req, res, next) {
 
     // FILE UPLOAD
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        console.log('Uploading: ' + filename);
 
         // generate key for file
         var newKey = uid(24);
@@ -52,10 +55,13 @@ module.exports.uploadFile = function(req, res, next) {
 
         var fstream = fs.createWriteStream(FILE_STORAGE + containerId + '/' + newKey + '.' + mime.extension(metadata.contentType));
         fstream.on('close', function() {
-            addFileToDatabase(metadata, containerId);
-            //res.redirect('back');
+            addFileToDatabase(metadata, containerId, function(err) {
+                if (err) return res.status(500).json(err);
+
+                res.status(201).json(metadata);
+            });
         });
-        res.status(200).json(metadata);
+
         file.pipe(fstream);
     });
 
@@ -65,14 +71,12 @@ module.exports.uploadFile = function(req, res, next) {
     });
 
     busboy.on('finish', function() {
-        console.log('Finished.');
     });
     req.pipe(busboy);
     // END FILE UPLOAD
 };
 
-var addFileToDatabase = function(metadata, ID) {
-    console.log('adding file to : ' + ID);
+var addFileToDatabase = function(metadata, ID, callback) {
     Container.findOneAndUpdate({
         _id: ID
     }, {
@@ -80,7 +84,9 @@ var addFileToDatabase = function(metadata, ID) {
             files: metadata
         }
     }, function(err) {
-            console.log(err);
+            if (err) return callback(err);
+
+            callback();
         }
     )
 };

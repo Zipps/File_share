@@ -15,6 +15,7 @@ var basePath = '/api';
 
 // Reusable Variables
 var upload = {};
+var files = [];
 
 describe('Uploads:', function() {
     it('Should respond with an upload id', function(done) {
@@ -52,7 +53,7 @@ describe('Files:', function() {
                 res.body.should.have.property('size');
                 res.body.should.have.property('contentType');
                 res.body.should.have.property('uploadDate');
-                file = res.body;
+                files.push(res.body.key + '.pdf');
             })
             .expect(201, done);
     });
@@ -67,20 +68,29 @@ describe('Files:', function() {
                 res.body.should.have.property('size');
                 res.body.should.have.property('contentType');
                 res.body.should.have.property('uploadDate');
-                file = res.body;
+                files.push(res.body.key + '.pdf');
             })
             .expect(201, done);
+    });
+    it('Should return an array of the file names', function(done) {
+        request(app)
+            .get(basePath + '/upload/' + upload._id)
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                var temp1 = res.body.files[0];
+                var temp2 = res.body.files[1];
+                temp1.should.have.property('key');
+                temp2.should.have.property('key');
+            })
+            .expect(200, done)
     });
 });
 
 describe('Merge:', function() {
     it('Should merge the PDF files', function (done) {
         var body = {
-            files: [
-                'test_file_one.pdf',
-                'test_file_two.pdf'
-            ]
-        };
+            files: files
+        }
         request(app)
             .post(basePath + '/upload/' + upload._id + '/merge')
             .send(body)
