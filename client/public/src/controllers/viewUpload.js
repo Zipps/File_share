@@ -7,7 +7,7 @@ angular.module('MyApp')
         })
             .success(function(res) {
                 console.log(res);
-                $scope.files = res;
+                $scope.files = res.body.files;
             })
             .error(function (err) {
                 console.log(err);
