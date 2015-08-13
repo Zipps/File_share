@@ -9,7 +9,7 @@ module.exports.getContainer = function(req, res, next) {
         else if (!doc) {
             return res.status(404).message("No upload could be found.");
         }
-        res.json(doc.files);
+        res.status(200).json(doc);
         });
     };
 
