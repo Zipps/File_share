@@ -35,6 +35,11 @@ module.exports.uploadFile = function(req, res, next) {
     // FILE UPLOAD
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
+        // Check that file upload is a PDF
+        if (mimetype != 'application/pdf') {
+            return res.status(403).json();
+        }
+
         // generate key for file
         var newKey = uid(24);
         var containerId = req.params._id;
