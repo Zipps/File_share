@@ -8,11 +8,14 @@
 
 var fs = require('fs');
 var PDFMerge = require('pdf-merge');
-var pdfPageCount = require('pdf_page_count');
-var pdfkit = require('pdfkit');
 var Container = require('../models/UploadFileModel');
 var uid = require('uid');
 var async = require('async');
+var pdfPageCount = require('pdf_page_count');
+
+// Blank PDF for inserting to merge
+var blankpage = './server/file_storage/blank.pdf';
+
 
 //  Constants
 var PDFTK_PATH = 'C:/PDFtk_Server/bin/pdftk.exe';
@@ -48,20 +51,26 @@ module.exports.merge = function (request, callback) {
     };
 
     // Get the file size of the merged doc
-    var getFileSize = function(key, callback) {
-        fs.stat(FILE_STORAGE + request.containerID + '/' + key + PDF_EXT, function(err, stats) {
+    var getFileData = function(key, callback) {
+        var filepath = FILE_STORAGE + request.containerID + '/' + key + PDF_EXT;
+        fs.stat(filepath, function(err, stats) {
             if(err) console.log("Error getting file size.");
             var fileSize = stats["size"];
-            callback(null, key, fileSize);
+            pdfPageCount.count(filepath, function (result) {
+                if (!result.success) res.status(500).json(result.error);
+                callback(null, key, fileSize, result.data);
+            })
+
         });
     };
 
     // Insert merged doc metadata into database
-    var addToDatabase = function(key, fileSize, callback) {
+    var addToDatabase = function(key, fileSize, pageCount, callback) {
         var metadata = {
             key: key,
             filename: TEMP_NAME,
             size: fileSize,
+            pageCount: pageCount,
             contentType: 'application/pdf',
             uploadDate: Date.now()
         };
@@ -81,7 +90,7 @@ module.exports.merge = function (request, callback) {
     async.waterfall([
         pdfFileList,
         mergePDFs,
-        getFileSize,
+        getFileData,
         addToDatabase
     ], function (err, metadata) {
         if (err) return next(err);

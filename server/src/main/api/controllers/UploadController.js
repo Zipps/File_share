@@ -5,6 +5,7 @@ var fs = require('fs');
 var uid = require('uid');
 var mime = require('mime');
 var glob = require('glob');
+var pdfPageCount = require('pdf_page_count');
 
 var FILE_STORAGE = './server/file_storage/';
 
@@ -16,8 +17,8 @@ module.exports.newUpload = function(req, res, next) {
     });
 
     // Create directory from _id if it does not exist
-    var key = container._id;
-    var dir = FILE_STORAGE + key;
+    var id = container._id;
+    var dir = FILE_STORAGE + id;
     if(!fs.exists(dir)) {
         fs.mkdir(dir);
     }
@@ -43,17 +44,20 @@ module.exports.uploadFile = function(req, res, next) {
         // generate key for file
         var newKey = uid(24);
         var containerId = req.params._id;
+        var filepath = FILE_STORAGE + containerId + '/' + newKey + '.pdf';
 
-        var metadata= {
-            key: newKey,
-            filename: filename,
-            size: req.headers['content-length'],
-            contentType: mimetype,
-            uploadDate: Date.now()
-        };
-
-        var fstream = fs.createWriteStream(FILE_STORAGE + containerId + '/' + newKey + '.' + mime.extension(metadata.contentType));
+        var fstream = fs.createWriteStream(filepath);
         fstream.on('close', function() {
+
+            var metadata= {
+                key: newKey,
+                filename: filename,
+                size: req.headers['content-length'],
+                pageCount: getPageCount(filepath),
+                contentType: mimetype,
+                uploadDate: Date.now()
+            };
+
             addFileToDatabase(metadata, containerId, function(err) {
                 if (err) return res.status(500).json(err);
 
@@ -63,6 +67,13 @@ module.exports.uploadFile = function(req, res, next) {
 
         file.pipe(fstream);
     });
+
+    var getPageCount = function(filepath) {
+        pdfPageCount.count(filepath, function (result) {
+            if (!result.success) res.status(500).json(result.error);
+            return result.data;
+        })
+    };
 
     var addFileToDatabase = function(metadata, ID, callback) {
         Container.findOneAndUpdate({

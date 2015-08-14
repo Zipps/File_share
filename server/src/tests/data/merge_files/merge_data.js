@@ -4,6 +4,7 @@ var container = {
             "key": Math.round(Math.random() * 100000000000),
             "filename": "test_file",
             "size": 10,
+            "pageCount": 3,
             "contentType": "application/pdf",
             "uploadDate": Date.now()
         },
@@ -11,6 +12,7 @@ var container = {
             "key": Math.round(Math.random() * 100000000000),
             "filename": "test_file",
             "size": 10,
+            "pageCount": 2,
             "contentType": "application/pdf",
             "uploadDate": Date.now()
         }

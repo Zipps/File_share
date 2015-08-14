@@ -61,6 +61,7 @@ describe('Merge:', function() {
                 res.body.should.have.property('key');
                 res.body.should.have.property('filename');
                 res.body.should.have.property('size');
+                res.body.should.have.property('pageCount');
                 res.body.should.have.property('contentType');
                 res.body.should.have.property('uploadDate');
                 mergeFileKey = res.body.key;
@@ -81,6 +82,7 @@ describe('Merge:', function() {
                 doc.files[0].should.have.property('key');
                 doc.files[0].should.have.property('filename');
                 doc.files[0].should.have.property('size');
+                doc.files[0].should.have.property('pageCount');
                 doc.files[0].should.have.property('contentType');
                 doc.files[0].should.have.property('uploadDate');
 

@@ -18,6 +18,7 @@ var containerSchema = new Schema({
             key: {type: String, required: true, index: {unique: true}},
             filename: {type: String, required: true},
             size: {type: Number, required: true},
+            pageCount: {type: Number, required: true},
             contentType: {type: String, required: true},
             uploadDate: {type: Date, required: true}
         }
