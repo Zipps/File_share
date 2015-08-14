@@ -15,7 +15,7 @@ var containerSchema = new Schema({
     files: [
         {
             _id: {required: false},
-            key: {type: String, required: true},
+            key: {type: String, required: true, index: {unique: true}},
             filename: {type: String, required: true},
             size: {type: Number, required: true},
             contentType: {type: String, required: true},
