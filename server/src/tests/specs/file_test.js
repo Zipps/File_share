@@ -74,9 +74,10 @@ describe('Files:', function() {
     });
     it("Should reject a non-PDF file upload attempt", function(done) {
         request(app)
-            .post(basePath + '/upload' + upload._id + '/file')
+            .post(basePath + '/upload/' + upload._id + '/file')
             .attach('test-file', __dirname + '/../data/test_file.docx')
-            .expect(500, done);
+            .expect('Content-Type', /json/)
+            .expect(403, done);
     });
     it('Should return an array of the file names', function(done) {
         request(app)
@@ -96,7 +97,7 @@ describe('Merge:', function() {
     it('Should merge the PDF files', function (done) {
         var body = {
             files: files
-        }
+        };
         request(app)
             .post(basePath + '/upload/' + upload._id + '/merge')
             .send(body)
