@@ -1,5 +1,5 @@
 var Busboy = require('busboy');
-var Container = require('../models/UploadFileModel');
+var Container = require('../models/UploadModel');
 var Utils = require('../utils/ErrorHelper');
 var fs = require('fs');
 var uid = require('uid');

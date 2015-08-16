@@ -1,4 +1,4 @@
-var Container = require('../models/UploadFileModel');
+var Container = require('../models/UploadModel');
 
 module.exports.getContainer = function(req, res, next) {
     var containerId = req.params._id;

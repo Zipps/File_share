@@ -1,5 +1,5 @@
 /**
- * MergePdfs.js
+ * MergeService.js
  *
  * @description :: This is the service for merging PDF files
  * @docs        ::
@@ -8,7 +8,7 @@
 
 var fs = require('fs');
 var PDFMerge = require('pdf-merge');
-var Container = require('../models/UploadFileModel');
+var Container = require('../models/UploadModel');
 var uid = require('uid');
 var async = require('async');
 var pdfPageCount = require('pdf_page_count');

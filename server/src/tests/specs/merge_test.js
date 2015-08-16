@@ -18,7 +18,7 @@ var files = [];
 var mergeFileKey = 0;
 
 // Load database model
-var Container = require('../../main/api/models/UploadFileModel');
+var Container = require('../../main/api/models/UploadModel');
 
 
 before(function (done) {
@@ -27,7 +27,10 @@ before(function (done) {
 
     // add to database
     container.save(function (err) {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            throw err;
+        }
 
     });
 
