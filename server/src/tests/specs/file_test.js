@@ -22,7 +22,6 @@ describe('Uploads:', function() {
             .post(basePath + '/upload')
             .expect('Content-Type', /json/)
             .expect(function(res) {
-                console.log(res.body);
                 upload = res.body;
                 upload.should.have.property('_id').should.not.equal(null);
             })

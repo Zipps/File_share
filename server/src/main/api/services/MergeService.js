@@ -44,7 +44,6 @@ module.exports.merge = function (request, callback) {
         pdfMerge.asNewFile(filePath).merge(function(err) {
             if(err) return console.log(err);
             else {
-                console.log("Files merged");
                 callback(null, newKey);
             }
         });
